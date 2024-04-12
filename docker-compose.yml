@@ -1,0 +1,39 @@
+services:
+
+  hrplatform:
+    container_name: hrplatform
+    build: .
+    volumes:
+      - ./HRPLATFORM:/var/www/html
+    ports:
+      - 8010:80
+    networks:
+      - hrplatformnet
+    
+  mysqldbhrplatform:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: hrplatformdb
+    restart: unless-stopped
+    ports:
+      - 8310:3306
+    networks:
+      - hrplatformnet
+    volumes:
+      - mysqldatahrplatform:/var/lib/mysql
+  phpmyadminhrplatform:
+    image: phpmyadmin:latest
+    ports:
+      - 8025:80
+    environment:
+      - PMA_ARBITRARY=1
+    networks:
+      - hrplatformnet
+networks:
+  hrplatformnet:
+    driver: bridge
+
+volumes:
+  mysqldatahrplatform:
+  
